@@ -1,0 +1,30 @@
+Package: hyperinfcompare
+Type: Package
+Title: Compare inferences from hypercubic EvAM models
+Version: 0.1.0
+Author: Iain Johnston
+Maintainer: Iain Johnston <iain.johnston@uib.no>
+Description: Perform statistical comparisons of the size and reproducibility of differences between evolutionary accumulation models (EvAMs) learned from the hyperinf ecosystem.
+    Associated with the manuscript "A method for comparing inferred evolutionary accumulation dynamics across covariates and model structures".
+License: CC-BY 4.0
+Encoding: UTF-8
+LazyData: true
+Imports:
+    hyperinf,
+    hyperdags,
+    ggplot2,
+    ggpubr,
+    ape,
+    dplyr,
+    tidyr,
+    readxl,
+    ggraph,
+    igraph
+Remotes:
+    StochasticBiology/hyperinf,
+    StochasticBiology/hyperdags
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.2.3
