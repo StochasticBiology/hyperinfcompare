@@ -29,15 +29,10 @@ if(run.1 == TRUE) {
         fit.c.tmp = hyperinf(data.c.tmp, boot.parallel = 30)
         for(p in (1:7)/10) {
           for(q in (1:7)/10) {
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q, type = "relative")
-            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q, type = "absolute")
-            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "absolute", diffs = nrow(tmp.co)))
-            
-            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp, threshold=p, percentile=q, type = "relative")
-            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "same", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp, threshold=p, percentile=q, type = "absolute")
-            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "same", method = "absolute", diffs = nrow(tmp.co)))
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q)
+            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", diffs = nrow(tmp.co)))
+            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp, threshold=p, percentile=q)
+            res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "same", diffs = nrow(tmp.co)))
           }
         }
       }
@@ -61,10 +56,8 @@ if(run.2 == TRUE) {
         fit.b.tmp = hyperinf(data.b.tmp, boot.parallel = 30)
         for(p in (1:7)/10) {
           for(q in (1:7)/10) {
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q, type = "relative")
-            res.2 = rbind(res.2, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q, type = "absolute")
-            res.2 = rbind(res.2, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "absolute", diffs = nrow(tmp.co)))
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, threshold=p, percentile=q)
+            res.2 = rbind(res.2, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", diffs = nrow(tmp.co)))
           }
         }
       }
