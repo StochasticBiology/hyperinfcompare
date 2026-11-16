@@ -32,5 +32,6 @@ plot.co.a = plot_hyperinf_compare_orderings(fit.1a, fit.2a,
 print(plot.co.a)
 
 # the comparison itself
-compare_orderings(fit.1a, fit.2a)
+compare_orderings(fit.1a, fit.2a, type="relative")
+compare_orderings(fit.1a, fit.2a, type="absolute")
 
