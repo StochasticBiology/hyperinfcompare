@@ -11,12 +11,12 @@ run.2 = TRUE     # very similar example
 nsamp = 100
 
 if(run.1 == TRUE) {
-  
+
   # synthetic data
   set.seed(1)
-  
+
   ########### very different pathways
-  
+
   res = data.frame()
   for(L in c(3, 5, 7)) {
     # basic set of states from this process
@@ -34,21 +34,21 @@ if(run.1 == TRUE) {
         # loop through thresholds, using method to characterise relative and absolute ordering differences
         for(p in (1:7)/10) {
           for(q in (1:7)/10) {
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, 
-                                       threshold=p, percentile=q, 
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp,
+                                       threshold=p, percentile=q,
                                        type = "relative", n.samples = nsamp)
             res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, 
-                                       threshold=p, percentile=q, 
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp,
+                                       threshold=p, percentile=q,
                                        type = "absolute", n.samples = nsamp)
             res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "absolute", diffs = nrow(tmp.co)))
-            
-            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp, 
-                                       threshold=p, percentile=q, 
+
+            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp,
+                                       threshold=p, percentile=q,
                                        type = "relative", n.samples = nsamp)
             res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "same", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp, 
-                                       threshold=p, percentile=q, 
+            tmp.co = compare_orderings(fit.a.tmp, fit.c.tmp,
+                                       threshold=p, percentile=q,
                                        type = "absolute", n.samples = nsamp)
             res = rbind(res, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "same", method = "absolute", diffs = nrow(tmp.co)))
           }
@@ -61,7 +61,7 @@ if(run.1 == TRUE) {
 
 if(run.2 == TRUE) {
   ########### very similar pathways
-  
+
   res.2 = data.frame()
   for(L in c(3, 5, 7)) {
     # two basic state sets, one a slight variant on the other
@@ -79,12 +79,12 @@ if(run.2 == TRUE) {
         # loop through thresholds, using method to characterise relative and absolute ordering differences
         for(p in (1:7)/10) {
           for(q in (1:7)/10) {
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, 
-                                       threshold=p, percentile=q, 
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp,
+                                       threshold=p, percentile=q,
                                        type = "relative", n.samples = nsamp)
             res.2 = rbind(res.2, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "relative", diffs = nrow(tmp.co)))
-            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp, 
-                                       threshold=p, percentile=q, 
+            tmp.co = compare_orderings(fit.a.tmp, fit.b.tmp,
+                                       threshold=p, percentile=q,
                                        type = "absolute", n.samples = nsamp)
             res.2 = rbind(res.2, data.frame(L = L, n = n, sample=sample, p = p, q = q, type = "diff", method = "absolute", diffs = nrow(tmp.co)))
           }
@@ -129,11 +129,11 @@ res.2$bindiffs[res.2$diffs > 0] = 1
 res.2.abs.mean = res.2[res.2$method == "absolute",] %>%
   dplyr::group_by(L, n, p, q, type) %>%
   dplyr::summarise(diffs = mean(diffs), bindiffs = mean(bindiffs), .groups = "drop")
-colnames(res.2.abs.mean)[6:7] = c("diffs_diff", "bindiffs_diff") 
+colnames(res.2.abs.mean)[6:7] = c("diffs_diff", "bindiffs_diff")
 res.2.rel.mean = res.2[res.2$method == "relative",] %>%
   dplyr::group_by(L, n, p, q, type) %>%
   dplyr::summarise(diffs = mean(diffs), bindiffs = mean(bindiffs), .groups = "drop")
-colnames(res.2.rel.mean)[6:7] = c("diffs_diff", "bindiffs_diff") 
+colnames(res.2.rel.mean)[6:7] = c("diffs_diff", "bindiffs_diff")
 
 # join the null comparison from the first batch to the second for FPR
 res.2.abs.mean <- res.2.abs.mean |>
@@ -153,40 +153,40 @@ res.2.rel.mean <- res.2.rel.mean |>
 
 # big set of ROC curves for absolute/relative and big/small differences
 big.diag = ggarrange(
-  ggplot(res.abs.mean, 
-         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) + 
+  ggplot(res.abs.mean,
+         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
     geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
     facet_grid(factor(paste("L =",L),
-                      levels=unique(paste("L =", L))) ~ 
+                      levels=unique(paste("L =", L))) ~
                  factor(paste("n =", n),
-                        levels=unique(paste("n =", n)))) + 
+                        levels=unique(paste("n =", n)))) +
     xlim(0,1) + ylim(0,1) + theme_minimal() + theme(axis.text.x = element_text(angle=45, hjust = 1))
   ,
-  ggplot(res.2.abs.mean, 
-         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) + 
+  ggplot(res.2.abs.mean,
+         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
     geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
     facet_grid(factor(paste("L =",L),
-                      levels=unique(paste("L =", L))) ~ 
+                      levels=unique(paste("L =", L))) ~
                  factor(paste("n =", n),
-                        levels=unique(paste("n =", n)))) + 
+                        levels=unique(paste("n =", n)))) +
     xlim(0,1) + ylim(0,1)+ theme_minimal()+ theme(axis.text.x = element_text(angle=45, hjust = 1))
   ,
-  ggplot(res.rel.mean, 
-         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) + 
+  ggplot(res.rel.mean,
+         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
     geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
     facet_grid(factor(paste("L =",L),
-                      levels=unique(paste("L =", L))) ~ 
+                      levels=unique(paste("L =", L))) ~
                  factor(paste("n =", n),
-                        levels=unique(paste("n =", n)))) + 
+                        levels=unique(paste("n =", n)))) +
     xlim(0,1) + ylim(0,1) + theme_minimal()+ theme(axis.text.x = element_text(angle=45, hjust = 1))
   ,
-  ggplot(res.2.rel.mean, 
-         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) + 
+  ggplot(res.2.rel.mean,
+         aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
     geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
     facet_grid(factor(paste("L =",L),
-                      levels=unique(paste("L =", L))) ~ 
+                      levels=unique(paste("L =", L))) ~
                  factor(paste("n =", n),
-                        levels=unique(paste("n =", n)))) + 
+                        levels=unique(paste("n =", n)))) +
     xlim(0,1) + ylim(0,1) + theme_minimal()+ theme(axis.text.x = element_text(angle=45, hjust = 1)),
   labels = c("Ai", "ii", "Bi", "ii"),
   common.legend = TRUE,
@@ -194,12 +194,12 @@ big.diag = ggarrange(
 )
 
 # FPR for different p, q
-little.diag = 
+little.diag =
   ggplot(res.abs.mean, aes(x=p, y=q, fill=bindiffs_same)) + geom_tile() +
   facet_grid(factor(paste("L =",L),
-                    levels=unique(paste("L =", L))) ~ 
+                    levels=unique(paste("L =", L))) ~
                factor(paste("n =", n),
-                      levels=unique(paste("n =", n)))) + 
+                      levels=unique(paste("n =", n)))) +
   labs(fill = "FPR") + theme_minimal()
 
 sf = 2
@@ -238,19 +238,19 @@ nominory = scale_y_continuous(breaks = scales::breaks_width(1), minor_breaks = N
 
 # combine data plot, inference plot, and ROC curves
 mega.plot=    ggarrange(
-  ggarrange(plot_hyperinf_data(data.a.tmp), 
-            plot_hyperinf_data(data.c.tmp), 
+  ggarrange(plot_hyperinf_data(data.a.tmp),
+            plot_hyperinf_data(data.c.tmp),
             plot_hyperinf_data(data.b.tmp), nrow=1, labels=c("Ai", "ii", "iii")),
-  ggarrange(comp.1.plot + recolor2 + nominorx + nominory + scale_x_continuous(breaks = 1:5), 
-            comp.2.plot + recolor2 + nominorx + nominory, labels = c("B", "C")),
+  ggarrange(comp.1.plot + recolor2 + nominorx + nominory + scale_x_continuous(breaks = 1:5) + labs(fill = "Model", y = "Feature"),
+            comp.2.plot + recolor2 + nominorx + nominory + labs(fill = "Model", y = "Feature"), labels = c("B", "C")),
   ggarrange(
-    ggplot(res.abs.mean[res.abs.mean$L == 5 & res.abs.mean$n == 10,], 
-           aes(x = same, y = diff, color = p, shape = factor(q))) + 
+    ggplot(res.abs.mean[res.abs.mean$L == 5 & res.abs.mean$n == 10,],
+           aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
       geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
       xlim(0,1) + ylim(0,1) + theme_minimal() + theme(axis.text.x = element_text(angle=45, hjust = 1))
     ,
-    ggplot(res.2.abs.mean[res.2.abs.mean$L == 5 & res.2.abs.mean$n == 10,], 
-           aes(x = same, y = diff, color = p, shape = factor(q))) + 
+    ggplot(res.2.abs.mean[res.2.abs.mean$L == 5 & res.2.abs.mean$n == 10,],
+           aes(x = bindiffs_same, y = bindiffs_diff, color = p, shape = factor(q))) +
       geom_line() + geom_point() + geom_abline() + labs(x = "FPR", y = "TPR", shape = "q", color="p") +
       xlim(0,1) + ylim(0,1)+ theme_minimal()+ theme(axis.text.x = element_text(angle=45, hjust = 1))
     ,
